@@ -204,9 +204,10 @@ async function addGrader() {
         });
         await secondaryAuth.sendPasswordResetEmail(email);
 
-        // Send custom grader welcome email
+        // Send custom grader welcome email via Gmail SMTP
+        let emailSent = false;
         try {
-            await fetch('/api/send-notification', {
+            const response = await fetch('/api/send-notification', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -215,9 +216,18 @@ async function addGrader() {
                     type: 'grader_welcome'
                 })
             });
-        } catch (emailErr) { console.warn('Grader email failed:', emailErr); }
+            const result = await response.json();
+            if (result.success) {
+                emailSent = true;
+                console.log('Grader welcome email sent:', result.messageId);
+            } else {
+                console.error('Grader email API error:', result.error);
+            }
+        } catch (emailErr) {
+            console.error('Grader email failed:', emailErr);
+        }
 
-        alert('Grader created. Welcome email sent.');
+        alert('Grader created!' + (emailSent ? ' Welcome email sent.' : ' (Custom email failed - check console)'));
         document.getElementById('newGraderName').value = '';
         document.getElementById('newGraderEmail').value = '';
         loadGraders();
