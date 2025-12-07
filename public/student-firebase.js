@@ -114,11 +114,6 @@ appAuth.onAuthStateChanged(async (user) => {
             mainPortal.style.display = 'none';
             mainPortal.classList.add('hidden');
         }
-        const authScreen = document.getElementById('authScreen');
-        if (authScreen) {
-            authScreen.style.display = 'block';
-            authScreen.classList.remove('hidden');
-        }
         if (!mainPortal) pendingMainRender = true;
         return;
     }
@@ -862,7 +857,7 @@ function updateTimer() {
     }
     if (remaining <= 0) {
         clearInterval(timerInterval);
-        submitTest(true);
+        confirmSubmission(true);
     }
 }
 
@@ -911,47 +906,75 @@ function updateLatexPreview() {
 
 // ------------------ Submission Logic ------------------
 
-function submitTest(isForced = false) {
-    if (!testActive && !isForced) return;
+async function submitTest() {
+    // Collect answers
+    const q1 = cleanAnswer(document.getElementById('q1Answer').value);
+    const q2 = cleanAnswer(document.getElementById('q2Answer').value);
+    const q3 = document.getElementById('latexInput').value;
 
-    // If forced (timeout), just go straight to confirmation logic
-    if (isForced) {
-        confirmSubmission(true);
-        return;
-    }
+    const filledCount = [q1, q2, q3].filter(a => a && a.trim()).length;
+    const totalQuestions = 3;
 
-    // Otherwise show summary modal
-    const q1Answer = (document.getElementById('q1Answer') && document.getElementById('q1Answer').value.trim());
-    const q2Answer = (document.getElementById('q2Answer') && document.getElementById('q2Answer').value.trim());
-    const q3Answer = (document.getElementById('latexInput') && document.getElementById('latexInput').value.trim());
-
-    // Update summary in modal
-    const s1 = document.getElementById('summaryQ1');
-    const s2 = document.getElementById('summaryQ2');
-    const s3 = document.getElementById('summaryQ3');
-
-    if (s1) {
-        s1.textContent = q1Answer ? 'Answered' : 'Not Answered';
-        s1.style.color = q1Answer ? '#28a745' : '#dc3545';
-        s1.style.fontWeight = 'bold';
-    }
-    if (s2) {
-        s2.textContent = q2Answer ? 'Answered' : 'Not Answered';
-        s2.style.color = q2Answer ? '#28a745' : '#dc3545';
-        s2.style.fontWeight = 'bold';
-    }
-    if (s3) {
-        // Check if it's just boilerplate
-        const isBoilerplate = q3Answer === LATEX_BOILERPLATE.trim() || !q3Answer;
-        s3.textContent = !isBoilerplate ? 'Answered' : 'Not Answered';
-        s3.style.color = !isBoilerplate ? '#28a745' : '#dc3545';
-        s3.style.fontWeight = 'bold';
-    }
-
+    // Show submission summary modal
     const modal = document.getElementById('submissionSummaryModal');
+    const summaryList = document.getElementById('submissionSummaryList');
+
+    if (summaryList) {
+        summaryList.innerHTML = `
+            <li>Question 1: <strong class="${q1 ? 'text-success' : 'text-danger'}">${q1 ? 'Answered' : 'Unanswered'}</strong></li>
+            <li>Question 2: <strong class="${q2 ? 'text-success' : 'text-danger'}">${q2 ? 'Answered' : 'Unanswered'}</strong></li>
+            <li>Question 3: <strong class="${q3 && q3.trim() !== LATEX_BOILERPLATE ? 'text-success' : 'text-danger'}">${q3 && q3.trim() !== LATEX_BOILERPLATE ? 'Answered' : 'Unanswered (or boilerplate)'}</strong></li>
+        `;
+    }
+
     if (modal) {
-        modal.style.display = 'block';
         modal.classList.add('show');
+    }
+}
+
+function closeSubmissionSummary() {
+    const modal = document.getElementById('submissionSummaryModal');
+    if (modal) modal.classList.remove('show');
+}
+
+async function confirmSubmission(isForced = false) {
+    const modal = document.getElementById('submissionSummaryModal');
+    if (modal) modal.classList.remove('show');
+
+    // Proceed with submission
+    const q1 = cleanAnswer(document.getElementById('q1Answer').value);
+    const q2 = cleanAnswer(document.getElementById('q2Answer').value);
+    const q3 = document.getElementById('latexInput').value;
+
+    showLoading('Submitting your test...');
+    try {
+        await firestore.collection('submissions').add({
+            userId: currentUser.uid,
+            studentEmail: currentUser.email,
+            studentName: currentUser.name,
+            day: currentDay,
+            q1Answer: q1,
+            q2Answer: q2,
+            q3Answer: q3,
+            exitCount: exitCount,
+            exitLogs: exitLogs,
+            submittedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            graded: false,
+            totalTime: Date.now() - startTime
+        });
+
+        // Delete active test record
+        await firestore.collection('activeTests').doc(`${currentUser.uid}_day${currentDay}`).delete();
+
+        hideLoading();
+        testActive = false;
+        clearInterval(timerInterval);
+
+        // Return to main portal
+        window.location.reload();
+    } catch (e) {
+        hideLoading();
+        alert('Error submitting test: ' + e.message);
     }
 }
 
@@ -1235,16 +1258,28 @@ function updateLatexPreview() {
             content = lines.join('\n');
         }
 
-        content = content.trim();
+        // 3. Formatting Replacements for Non-MathJax Environments
+        content = content
+            // Sections -> Bold Headers
+            .replace(/\\section\*?\{([^}]+)\}/g, '<br><strong>$1</strong><br>')
+            .replace(/\\subsection\*?\{([^}]+)\}/g, '<br><strong>$1</strong><br>')
+            // Bold text -> Bold
+            .replace(/\\textbf\{([^}]+)\}/g, '<strong>$1</strong>')
+            // Italics -> Em
+            .replace(/\\textit\{([^}]+)\}/g, '<em>$1</em>')
+            // Lists (enumerate/itemize) -> HTML-ish bullets
+            .replace(/\\begin\{enumerate\}/g, '')
+            .replace(/\\end\{enumerate\}/g, '')
+            .replace(/\\begin\{itemize\}/g, '')
+            .replace(/\\end\{itemize\}/g, '')
+            .replace(/\\item\s*/g, '<br>&bull; ')
+            // Newlines
+            .replace(/\\\\/g, '<br>');
 
-        preview.innerHTML = formatRichText(content) || '<p style="color: #999;">Write your proof...</p>';
+        preview.innerHTML = content;
 
-        if (window.MathJax && window.MathJax.typesetPromise) {
-            MathJax.typesetClear([preview]);
-            MathJax.typesetPromise([preview]).catch((err) => {
-                console.error('MathJax error:', err);
-                preview.innerHTML += '<p style="color: #dc3545; font-size: 12px; margin-top: 10px;"><strong>LaTeX Error:</strong> Check your syntax</p>';
-            });
+        if (window.MathJax) {
+            MathJax.typesetPromise([preview]).catch((err) => console.log('MathJax error: ', err));
         }
     }, 500);
 }

@@ -58,28 +58,6 @@ function buildGradingPrompt(questionText, studentAnswer, rubric) {
 
     // Updated Persona: Formal 10th Grader, Minimal Words, Holistic, Lighter
     const systemInstruction = `
-You are a smart, formal 10th-grade teaching assistant.
-Your job is to grade a student's math proof.
-Tone: Concise, objective, slightly formal but not stiff. Minimal adjectives.
-Criteria:
-- Be holistic. If the logic is mostly there, give partial credit.
-- Do not be overly pedantic about minor notation errors if the meaning is clear.
-- Feedback should be short (1-2 sentences max).
-- Point out the main error if any.
-- Give a score out of 10.
-
-Format your response as PURE JSON ONLY. No Markdown formatting.
-{
-  "score": number, // 0-10
-  "feedback": "string" // LaTeX supported, keep it very brief
-}
-`;
-
-    return `${systemInstruction}
-
-## QUESTION
-${questionText}
-
 ## RUBRIC (Total: 10 points)
 ${rubricText || 'Award points based on: correctness (4pts), clarity (3pts), completeness (3pts)'}
 

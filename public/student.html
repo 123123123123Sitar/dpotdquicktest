@@ -49,11 +49,11 @@
 
 
         .container {
-            max-width: 95%;
+            max-width: 98%;
             margin: 0 auto;
             background: white;
             border-radius: 12px;
-            padding: 40px;
+            padding: 20px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             border: 2px solid #E3E3E3;
         }
@@ -1328,12 +1328,35 @@
             <span class="sponsor-label">Proudly Sponsored By</span>
             <div class="sponsor-logos">
                 <a href="https://artofproblemsolving.com" target="_blank" rel="noopener noreferrer">
-                    <img src="https://aimforsevausa.org/wp-content/uploads/2018/09/Copy-of-AoPS-Logo.jpg"
-                        alt="Art of Problem Solving" class="sponsor-logo">
+                    <img src="https://artofproblemsolving.com/assets/images/logos/aops-logo-full.png"
+                        alt="Art of Problem Solving" style="height: 40px;">
                 </a>
             </div>
         </div>
-        <script src="student-firebase.js"></script>
+
+        <!-- Submission Summary Modal -->
+        <div id="submissionSummaryModal" class="confirmation-modal">
+            <div class="confirmation-content">
+                <h2>Ready to Submit?</h2>
+                <p>Here is the status of your answers:</p>
+                <ul id="submissionSummaryList" style="list-style: none; padding: 0;">
+                    <!-- Populated by JS -->
+                </ul>
+                <p style="margin-top: 15px; color: #666; font-size: 0.9em;">
+                    Once submitted, you cannot edit your answers.
+                </p>
+                <div class="confirmation-buttons">
+                    <button class="confirm-btn cancel" onclick="closeSubmissionSummary()">Go Back</button>
+                    <button class="confirm-btn start" onclick="confirmSubmission()">Submit Test</button>
+                </div>
+            </div>
+        </div>
+        <img src="https://aimforsevausa.org/wp-content/uploads/2018/09/Copy-of-AoPS-Logo.jpg"
+            alt="Art of Problem Solving" class="sponsor-logo">
+        </a>
+    </div>
+    </div>
+    <script src="student-firebase.js"></script>
 </body>
 
 </html>
