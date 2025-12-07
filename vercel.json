@@ -1,19 +1,8 @@
 {
   "version": 2,
   "routes": [
-    { "src": "/admin.html", "dest": "/public/admin.html" },
-    { "src": "/grader.html", "dest": "/public/grader.html" },
-    { "src": "/student.html", "dest": "/public/student.html" },
-
-    { "src": "/admin", "dest": "/public/admin.html" },
-    { "src": "/grader", "dest": "/public/grader.html" },
-
-    { "src": "/styles.css", "dest": "/public/styles.css" },
-    { "src": "/firebase-config.js", "dest": "/public/firebase-config.js" },
-    { "src": "/admin-firebase.js", "dest": "/public/admin-firebase.js" },
-    { "src": "/grader-firebase.js", "dest": "/public/grader-firebase.js" },
-    { "src": "/student-firebase.js", "dest": "/public/student-firebase.js" },
-
-    { "src": "/", "dest": "/public/student.html" }
+    { "src": "/admin", "dest": "/admin.html" },
+    { "src": "/grader", "dest": "/grader.html" },
+    { "src": "/", "dest": "/student.html" }
   ]
 }
