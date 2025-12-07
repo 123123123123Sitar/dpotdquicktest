@@ -1,43 +1,40 @@
 {
     "version": 2,
-    "builds": [
+    "rewrites": [
         {
-            "src": "api/**/*.js",
-            "use": "@vercel/node"
+            "source": "/api/:path*",
+            "destination": "/api/:path*"
         },
         {
-            "src": "public/**",
-            "use": "@vercel/static"
+            "source": "/admin",
+            "destination": "/public/admin.html"
+        },
+        {
+            "source": "/grader",
+            "destination": "/public/grader.html"
+        },
+        {
+            "source": "/",
+            "destination": "/public/student.html"
         }
     ],
-    "routes": [
+    "headers": [
         {
-            "src": "/api/(.*)",
-            "dest": "/api/$1"
-        },
-        {
-            "src": "/(.*\\.html)",
-            "dest": "/public/$1"
-        },
-        {
-            "src": "/(.*\\.js)",
-            "dest": "/public/$1"
-        },
-        {
-            "src": "/(.*\\.css)",
-            "dest": "/public/$1"
-        },
-        {
-            "src": "/",
-            "dest": "/public/student.html"
-        },
-        {
-            "src": "/admin",
-            "dest": "/public/admin.html"
-        },
-        {
-            "src": "/grader",
-            "dest": "/public/grader.html"
+            "source": "/api/(.*)",
+            "headers": [
+                {
+                    "key": "Access-Control-Allow-Origin",
+                    "value": "*"
+                },
+                {
+                    "key": "Access-Control-Allow-Methods",
+                    "value": "GET, POST, OPTIONS"
+                },
+                {
+                    "key": "Access-Control-Allow-Headers",
+                    "value": "Content-Type"
+                }
+            ]
         }
     ]
 }
