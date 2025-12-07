@@ -333,9 +333,16 @@ async function loadStats() {
         today.setHours(0, 0, 0, 0);
         const todaySnap = await firestore.collection('submissions')
             .where('gradedBy', '==', currentGrader.uid)
-            .where('humanGradedAt', '>=', firebase.firestore.Timestamp.fromDate(today))
             .get();
-        document.getElementById('todayCount').textContent = todaySnap.size;
+        // Filter in memory to avoid needing a composite index
+        let todayCount = 0;
+        todaySnap.forEach(doc => {
+            const d = doc.data();
+            if (d.humanGradedAt && d.humanGradedAt.toDate() >= today) {
+                todayCount++;
+            }
+        });
+        document.getElementById('todayCount').textContent = todayCount;
     } catch (e) {
         console.error('Load stats failed:', e);
     }
