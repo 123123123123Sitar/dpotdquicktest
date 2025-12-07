@@ -624,7 +624,7 @@ async function checkTodayTest() {
             <div style="text-align: center; padding: 40px;">
                 <h2 style="color: #EA5A2F; margin-bottom: 20px;">Day ${day} Test Available</h2>
                 <p style="font-size: 18px; color: #666; margin-bottom: 20px;">Ready to take today's test?</p>
-                <button class="btn" onclick="showConfirmation()" style="padding: 15px 40px, font-size: 18px;">Start Test</button>
+                <button class="btn" onclick="showConfirmation()" style="padding: 15px 40px; font-size: 18px;">Start Test</button>
                 <p style="margin-top: 12px; color: #999;">Time limit: ${minutes} minutes</p>
             </div>
         `);
@@ -700,7 +700,6 @@ async function startTest() {
         endTime: firebase.firestore.Timestamp.fromDate(new Date(endTime)),
         currentQuestion: 0,
         q1Answer: '',
-        q2Answer: '',
         q2Answer: '',
         q3Answer: LATEX_BOILERPLATE,
         exitCount: 0,
@@ -1097,7 +1096,7 @@ function recordViolation(type) {
     // persist to activeTests
     if (currentUser && currentDay !== null) {
         try {
-            firestore.collection('activeTests').doc(`${currentUser.uid}_day${currentDay} `).set({
+            firestore.collection('activeTests').doc(`${currentUser.uid}_day${currentDay}`).set({
                 exitCount,
                 exitLogs
             }, { merge: true });

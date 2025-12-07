@@ -717,7 +717,7 @@
             }
 
             100% {
-                transform: rotate(0deg);
+                transform: rotate(360deg);
             }
         }
 
@@ -1006,355 +1006,360 @@
 
     <div class="confirmation-modal" id="confirmationModal">
         <div class="confirmation-content">
-            <h2>Test Rules & Confirmation</h2>
+            <h2>Test Rules &amp; Confirmation</h2>
             <p style="font-size: 16px; margin-bottom: 15px;">Please read carefully before starting:</p>
             <ul>
-                <p><strong>WARNING: YOU HAVE LEFT THE TEST PAGE!</strong></p>
-                <p style="font-size: 18px; margin: 20px 0;">Return to the test immediately! Your time does not pause.
-                </p>
-                <p class="warning-count">Violations recorded: <span id="violationCount">0</span></p>
-                <button class="btn" onclick="returnToFullscreen()"
-                    style="max-width: 400px; padding: 20px 40px; font-size: 18px; margin-top: 20px; background: #fff; color: #dc3545; border: 3px solid #fff;">
-                    Return to Test & Enter Fullscreen
-                </button>
-        </div>
-
-        <button class="ai-toggle-btn" id="aiToggleBtn" onclick="toggleAIHelper()">
-            LaTeX Helper
-        </button>
-
-        <button class="latex-help-btn" id="latexHelpBtn" onmouseenter="showLatexHelp()" onmouseleave="hideLatexHelp()">
-            ?
-        </button>
-
-        <div class="latex-help-dropdown" id="latexHelpDropdown" onmouseenter="showLatexHelp()"
-            onmouseleave="hideLatexHelp()">
-            <h3>Basic LaTeX Syntax</h3>
-
-            <div class="latex-help-section">
-                <h4>Inline Math</h4>
-                <p>Wrap math in single dollar signs: <code>$x^2 + y^2 = z^2$</code></p>
-            </div>
-
-            <div class="latex-help-section">
-                <h4>Display Math (Centered)</h4>
-                <p>Use double dollar signs:</p>
-                <p><code>$$\frac{a}{b} = \frac{c}{d}$$</code></p>
-            </div>
-
-            <div class="latex-help-section">
-                <h4>Fractions</h4>
-                <p><code>\frac{numerator}{denominator}</code></p>
-                <p>Example: <code>$\frac{1}{2}$</code></p>
-            </div>
-
-            <div class="latex-help-section">
-                <h4>Exponents & Subscripts</h4>
-                <p>Exponent: <code>x^2</code> or <code>x^{10}</code></p>
-                <p>Subscript: <code>x_1</code> or <code>x_{10}</code></p>
-            </div>
-
-            <div class="latex-help-section">
-                <h4>Square Roots</h4>
-                <p><code>\sqrt{x}</code> or <code>\sqrt[3]{x}</code></p>
-            </div>
-
-            <div class="latex-help-section">
-                <h4>Greek Letters</h4>
-                <p><code>\alpha</code>, <code>\beta</code>, <code>\gamma</code>, <code>\theta</code>, <code>\pi</code>
-                </p>
-            </div>
-
-            <div class="latex-help-section">
-                <h4>Common Symbols</h4>
-                <p>Summation: <code>\sum_{i=1}^{n}</code></p>
-                <p>Integral: <code>\int_0^1 f(x) dx</code></p>
-                <p>Less/Greater: <code>\leq</code>, <code>\geq</code></p>
-                <p>Infinity: <code>\infty</code></p>
-            </div>
-
-            <div class="latex-help-section">
-                <h4>Parentheses (Auto-sizing)</h4>
-                <p><code>\left( \frac{a}{b} \right)</code></p>
+                <li>The test will be conducted in <strong>fullscreen mode</strong></li>
+                <li>Exiting fullscreen or switching tabs will be recorded as a <strong>violation</strong></li>
+                <li>You have a <strong>time limit</strong> to complete the test</li>
+                <li>Your answers will be auto-saved periodically</li>
+                <li>Once submitted, you cannot edit your answers</li>
+            </ul>
+            <div class="confirmation-buttons">
+                <button class="confirm-btn cancel" onclick="cancelTest()">Cancel</button>
+                <button class="confirm-btn start" onclick="confirmStart()">Start Test</button>
             </div>
         </div>
-
-        <div class="ai-helper" id="aiHelper">
-            <div class="ai-header">
-                <span>LaTeX Helper</span>
-                <button class="ai-close" onclick="toggleAIHelper()">×</button>
-            </div>
-            <div class="ai-chat-container" id="aiChatContainer">
-                <div class="ai-message assistant">
-                    <strong>LaTeX Helper:</strong> I can ONLY help with LaTeX syntax and formatting.
-                    <br><br>
-                    <strong style="color: #dc3545;">I CANNOT:</strong>
-                    <ul style="margin: 10px 0; padding-left: 20px;">
-                        <li>Solve math problems</li>
-                        <li>Provide answers or hints</li>
-                        <li>Explain math concepts</li>
-                        <li>Calculate anything</li>
-                    </ul>
-                    <strong style="color: #28a745;">I CAN help with:</strong>
-                    <ul style="margin: 10px 0; padding-left: 20px;">
-                        <li>"How do I write a fraction?"</li>
-                        <li>"What's the syntax for square roots?"</li>
-                        <li>"How do I make subscripts?"</li>
-                        <li>"How do I write Greek letters?"</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="ai-input-container">
-                <input type="text" id="aiInput" placeholder="Ask about LaTeX syntax..."
-                    onkeypress="handleAIEnter(event)">
-                <button type="button" onclick="sendAIMessage()">Send</button>
-            </div>
-        </div>
-
-        <div class="container">
-            <div id="authScreen">
-                <h1>D.PotD Problems of the Day</h1>
-                <p class="subtitle">Student Portal</p>
-
-                <div id="loginForm">
-                    <div class="form-group">
-                        <label>Email:</label>
-                        <input type="email" id="loginEmail" onkeypress="handleLoginEnter(event)">
-                    </div>
-                    <div class="form-group">
-                        <label>Password:</label>
-                        <input type="password" id="loginPassword" onkeypress="handleLoginEnter(event)">
-                    </div>
-                    <button class="btn" onclick="login()">Login</button>
-                    <div class="forgot-password-link">
-                        <a href="#" onclick="showForgotPassword(); return false;">Forgot Password?</a>
-                    </div>
-                    <div id="loginStatus" class="status"></div>
-                    <p style="text-align: center; color: #666; margin-top: 20px; font-size: 14px;">
-                        Don't have an account? Please register <a
-                            href="https://www.dtechmathclub.org/problem-of-the-day">here</a>.
-                    </p>
-                </div>
-
-                <div id="forgotPasswordForm" class="hidden">
-                    <h2 style="text-align: center; margin-bottom: 20px;">Reset Password</h2>
-                    <p style="text-align: center; color: #666; margin-bottom: 20px;">
-                        Enter your email address and we'll send you a “Set new password” email.
-                    </p>
-                    <div class="form-group">
-                        <label>Email:</label>
-                        <input type="email" id="resetEmail">
-                    </div>
-                    <button class="btn" onclick="requestPasswordReset()">Send Reset Link</button>
-                    <button class="btn-secondary" onclick="showLogin()" style="width: 100%; margin-top: 10px;">Back to
-                        Login</button>
-                    <div id="resetStatus" class="status"></div>
-                </div>
-
-                <div id="resetPasswordForm" class="hidden">
-                    <h2 style="text-align: center; margin-bottom: 20px;">Create New Password</h2>
-                    <p style="text-align: center; color: #666; margin-bottom: 20px;">
-                        Enter your new password below.
-                    </p>
-                    <div class="form-group">
-                        <label>New Password:</label>
-                        <input type="password" id="newResetPassword">
-                    </div>
-                    <div class="form-group">
-                        <label>Confirm New Password:</label>
-                        <input type="password" id="confirmResetPassword">
-                    </div>
-                    <button class="btn" onclick="resetPassword()">Reset Password</button>
-                    <div id="resetPasswordStatus" class="status"></div>
-                </div>
-            </div>
-
-            <div id="mainPortal" class="hidden">
-                <div class="profile-header">
-                    <div class="profile-meta">
-                        <div class="profile-name-row">
-                            <span class="profile-name" id="profileName"></span>
-                            <div class="profile-rank hidden" id="profileRank">
-                                <span class="rank-badge-large" id="rankDisplay">#--</span>
-                                <span class="rank-text" id="rankDetails"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <button class="logout-btn" onclick="logout()">Logout</button>
-                </div>
-
-                <div class="tabs">
-                    <button class="tab active" onclick="switchMainTab('today')">Today's Test</button>
-                    <button class="tab" onclick="switchMainTab('leaderboard')">Leaderboard</button>
-                    <button class="tab" onclick="switchMainTab('history')">Score History</button>
-                    <button class="tab" onclick="switchMainTab('profile')">Profile</button>
-                </div>
-
-                <div id="todayTab" class="tab-content active">
-                    <div id="resumeTestBanner" class="resume-test-banner" style="display: none;">
-                        <h3>Resume Your Test</h3>
-                        <p>You have an active test for Day <span id="resumeDay"></span>. Click below to resume.</p>
-                        <button class="btn" onclick="resumeTest()">Resume Test</button>
-                    </div>
-                    <div id="testStatus"></div>
-                </div>
-
-                <div id="leaderboardTab" class="tab-content">
-                    <h2 style="margin-bottom: 20px;">Top 10 Leaderboard</h2>
-                    <p style="color: #666; margin-bottom: 20px;"></p>
-                    <div id="leaderboardContainer">
-                        <p style="color: #666; text-align: center;">Loading leaderboard...</p>
-                    </div>
-                </div>
-
-                <div id="historyTab" class="tab-content">
-                    <h2 style="margin-bottom: 20px;">Your Score History</h2>
-                    <div id="historyContainer"></div>
-                </div>
-
-                <div id="profileTab" class="tab-content">
-                    <h2 style="margin-bottom: 20px;">Profile Settings</h2>
-                    <div class="form-group">
-                        <label>Name:</label>
-                        <input type="text" id="profileNameInput" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label>Email:</label>
-                        <input type="email" id="profileEmailInput" readonly>
-                    </div>
-                    <hr style="margin: 30px 0; border: none; border-top: 2px solid #E3E3E3;">
-                    <h3 style="margin-bottom: 20px;">Change Password</h3>
-                    <div class="form-group">
-                        <label>Current Password:</label>
-                        <input type="password" id="currentPassword">
-                    </div>
-                    <div class="form-group">
-                        <label>New Password:</label>
-                        <input type="password" id="newPassword">
-                    </div>
-                    <div class="form-group">
-                        <label>Confirm New Password:</label>
-                        <input type="password" id="confirmNewPassword">
-                    </div>
-                    <button class="btn" onclick="changePassword()">Update Password</button>
-                    <div id="profileStatus" class="status"></div>
-                </div>
-            </div>
-
-            <div id="questionSection" class="question-section">
-                <div class="timer" id="timer">Time Remaining: 2:00:00</div>
-
-                <div style="text-align: center; margin-bottom: 30px;">
-                    <div style="font-size: 2.5em; font-weight: bold; color: #EA5A2F; margin-bottom: 10px;"
-                        id="testTitle">
-                        D.PotD Day 1</div>
-                </div>
-
-                <div id="navigationBar"
-                    style="display: none; background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
-                    <div
-                        style="display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap;">
-                        <button class="question-nav-btn" onclick="showQuestion(0)" id="navBtn0"
-                            style="padding: 10px 20px; border: 2px solid #E3E3E3; background: white; border-radius: 6px; cursor: pointer; font-weight: 600;">I</button>
-                        <button class="question-nav-btn" onclick="showQuestion(1)" id="navBtn1"
-                            style="padding: 10px 20px; border: 2px solid #E3E3E3; background: white; border-radius: 6px; cursor: pointer; font-weight: 600;">1</button>
-                        <button class="question-nav-btn" onclick="showQuestion(2)" id="navBtn2"
-                            style="padding: 10px 20px; border: 2px solid #E3E3E3; background: white; border-radius: 6px; cursor: pointer; font-weight: 600;">2</button>
-                        <button class="question-nav-btn" onclick="showQuestion(3)" id="navBtn3"
-                            style="padding: 10px 20px; border: 2px solid #E3E3E3; background: white; border-radius: 6px; cursor: pointer; font-weight: 600;">3</button>
-                        <div style="width: 2px; height: 30px; background: #E3E3E3; margin: 0 10px;"></div>
-                        <button class="btn" onclick="nextQuestion()" id="nextBtn"
-                            style="width: auto; padding: 10px 30px; margin: 0;">Next</button>
-                        <button class="btn" onclick="submitTest()" id="submitBtn"
-                            style="width: auto; padding: 10px 30px; margin: 0; background: #28a745;">Submit
-                            Test</button>
-                    </div>
-                </div>
-
-                <div id="instructionsPage" style="display: none;">
-                    <div class="question-box">
-                        <h2>Instructions</h2>
-                        <div id="instructionsContent" style="color:#333; font-size:1.05em; line-height:1.6;"></div>
-                        <div style="text-align:center; margin-top:20px;">
-                            <button class="btn" onclick="nextQuestion()" style="max-width:300px;">Proceed to Question
-                                1</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="q1Page" style="display: none;">
-                    <div class="question-box">
-                        <h2>Question 1</h2>
-                        <p id="q1Text"></p>
-                        <img id="q1Image" class="question-image" style="display: none;">
-                        <input type="text" id="q1Answer" placeholder="Your answer (numbers only)">
-                    </div>
-                    <div id="q1Status" class="status"></div>
-                </div>
-
-                <div id="q2Page" style="display: none;">
-                    <div class="question-box">
-                        <h2>Question 2</h2>
-                        <p id="q2Text"></p>
-                        <img id="q2Image" class="question-image" style="display: none;">
-                        <input type="text" id="q2Answer" placeholder="Your answer (numbers only)">
-                    </div>
-                    <div id="q2Status" class="status"></div>
-                </div>
-
-                <div id="q3Page" style="display: none;">
-                    <div class="question-box">
-                        <h2>Question 3</h2>
-                        <p id="q3Text"></p>
-                        <img id="q3Image" class="question-image" style="display: none;">
-                    </div>
-                    <div class="latex-editor-container">
-                        <div class="latex-input-section">
-                            <h3>LaTeX Code</h3>
-                            <textarea id="latexInput" placeholder="Write your proof using LaTeX here..."></textarea>
-                        </div>
-                        <div class="latex-preview-section">
-                            <h3>Live Preview</h3>
-                            <div id="latexPreview">Your formatted proof will appear here...</div>
-                        </div>
-                    </div>
-
-                    <div id="q3Status" class="status"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="sponsor-footer">
-            <span class="sponsor-label">Proudly Sponsored By</span>
-            <div class="sponsor-logos">
-                <a href="https://artofproblemsolving.com" target="_blank" rel="noopener noreferrer">
-                    <img src="https://artofproblemsolving.com/assets/images/logos/aops-logo-full.png"
-                        alt="Art of Problem Solving" style="height: 40px;">
-                </a>
-            </div>
-        </div>
-
-        <!-- Submission Summary Modal -->
-        <div id="submissionSummaryModal" class="confirmation-modal">
-            <div class="confirmation-content">
-                <h2>Ready to Submit?</h2>
-                <p>Here is the status of your answers:</p>
-                <ul id="submissionSummaryList" style="list-style: none; padding: 0;">
-                    <!-- Populated by JS -->
-                </ul>
-                <p style="margin-top: 15px; color: #666; font-size: 0.9em;">
-                    Once submitted, you cannot edit your answers.
-                </p>
-                <div class="confirmation-buttons">
-                    <button class="confirm-btn cancel" onclick="closeSubmissionSummary()">Go Back</button>
-                    <button class="confirm-btn start" onclick="confirmSubmission()">Submit Test</button>
-                </div>
-            </div>
-        </div>
-        <img src="https://aimforsevausa.org/wp-content/uploads/2018/09/Copy-of-AoPS-Logo.jpg"
-            alt="Art of Problem Solving" class="sponsor-logo">
-        </a>
     </div>
+
+    <div class="warning-overlay" id="warningOverlay">
+        <p><strong>WARNING: YOU HAVE LEFT THE TEST PAGE!</strong></p>
+        <p style="font-size: 18px; margin: 20px 0;">Return to the test immediately! Your time does not pause.</p>
+        <p class="warning-count">Violations recorded: <span id="violationCount">0</span></p>
+        <button class="btn" onclick="returnToFullscreen()"
+            style="max-width: 400px; padding: 20px 40px; font-size: 18px; margin-top: 20px; background: #fff; color: #dc3545; border: 3px solid #fff;">
+            Return to Test &amp; Enter Fullscreen
+        </button>
+    </div>
+
+    <button class="ai-toggle-btn" id="aiToggleBtn" onclick="toggleAIHelper()">
+        LaTeX Helper
+    </button>
+
+    <button class="latex-help-btn" id="latexHelpBtn" onmouseenter="showLatexHelp()" onmouseleave="hideLatexHelp()">
+        ?
+    </button>
+
+    <div class="latex-help-dropdown" id="latexHelpDropdown" onmouseenter="showLatexHelp()"
+        onmouseleave="hideLatexHelp()">
+        <h3>Basic LaTeX Syntax</h3>
+
+        <div class="latex-help-section">
+            <h4>Inline Math</h4>
+            <p>Wrap math in single dollar signs: <code>$x^2 + y^2 = z^2$</code></p>
+        </div>
+
+        <div class="latex-help-section">
+            <h4>Display Math (Centered)</h4>
+            <p>Use double dollar signs:</p>
+            <p><code>$$\frac{a}{b} = \frac{c}{d}$$</code></p>
+        </div>
+
+        <div class="latex-help-section">
+            <h4>Fractions</h4>
+            <p><code>\frac{numerator}{denominator}</code></p>
+            <p>Example: <code>$\frac{1}{2}$</code></p>
+        </div>
+
+        <div class="latex-help-section">
+            <h4>Exponents & Subscripts</h4>
+            <p>Exponent: <code>x^2</code> or <code>x^{10}</code></p>
+            <p>Subscript: <code>x_1</code> or <code>x_{10}</code></p>
+        </div>
+
+        <div class="latex-help-section">
+            <h4>Square Roots</h4>
+            <p><code>\sqrt{x}</code> or <code>\sqrt[3]{x}</code></p>
+        </div>
+
+        <div class="latex-help-section">
+            <h4>Greek Letters</h4>
+            <p><code>\alpha</code>, <code>\beta</code>, <code>\gamma</code>, <code>\theta</code>, <code>\pi</code>
+            </p>
+        </div>
+
+        <div class="latex-help-section">
+            <h4>Common Symbols</h4>
+            <p>Summation: <code>\sum_{i=1}^{n}</code></p>
+            <p>Integral: <code>\int_0^1 f(x) dx</code></p>
+            <p>Less/Greater: <code>\leq</code>, <code>\geq</code></p>
+            <p>Infinity: <code>\infty</code></p>
+        </div>
+
+        <div class="latex-help-section">
+            <h4>Parentheses (Auto-sizing)</h4>
+            <p><code>\left( \frac{a}{b} \right)</code></p>
+        </div>
+    </div>
+
+    <div class="ai-helper" id="aiHelper">
+        <div class="ai-header">
+            <span>LaTeX Helper</span>
+            <button class="ai-close" onclick="toggleAIHelper()">×</button>
+        </div>
+        <div class="ai-chat-container" id="aiChatContainer">
+            <div class="ai-message assistant">
+                <strong>LaTeX Helper:</strong> I can ONLY help with LaTeX syntax and formatting.
+                <br><br>
+                <strong style="color: #dc3545;">I CANNOT:</strong>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                    <li>Solve math problems</li>
+                    <li>Provide answers or hints</li>
+                    <li>Explain math concepts</li>
+                    <li>Calculate anything</li>
+                </ul>
+                <strong style="color: #28a745;">I CAN help with:</strong>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                    <li>"How do I write a fraction?"</li>
+                    <li>"What's the syntax for square roots?"</li>
+                    <li>"How do I make subscripts?"</li>
+                    <li>"How do I write Greek letters?"</li>
+                </ul>
+            </div>
+        </div>
+        <div class="ai-input-container">
+            <input type="text" id="aiInput" placeholder="Ask about LaTeX syntax..." onkeypress="handleAIEnter(event)">
+            <button type="button" onclick="sendAIMessage()">Send</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="authScreen">
+            <h1>D.PotD Problems of the Day</h1>
+            <p class="subtitle">Student Portal</p>
+
+            <div id="loginForm">
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" id="loginEmail" onkeypress="handleLoginEnter(event)">
+                </div>
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" id="loginPassword" onkeypress="handleLoginEnter(event)">
+                </div>
+                <button class="btn" onclick="login()">Login</button>
+                <div class="forgot-password-link">
+                    <a href="#" onclick="showForgotPassword(); return false;">Forgot Password?</a>
+                </div>
+                <div id="loginStatus" class="status"></div>
+                <p style="text-align: center; color: #666; margin-top: 20px; font-size: 14px;">
+                    Don't have an account? Please register <a
+                        href="https://www.dtechmathclub.org/problem-of-the-day">here</a>.
+                </p>
+            </div>
+
+            <div id="forgotPasswordForm" class="hidden">
+                <h2 style="text-align: center; margin-bottom: 20px;">Reset Password</h2>
+                <p style="text-align: center; color: #666; margin-bottom: 20px;">
+                    Enter your email address and we'll send you a “Set new password” email.
+                </p>
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" id="resetEmail">
+                </div>
+                <button class="btn" onclick="requestPasswordReset()">Send Reset Link</button>
+                <button class="btn-secondary" onclick="showLogin()" style="width: 100%; margin-top: 10px;">Back to
+                    Login</button>
+                <div id="resetStatus" class="status"></div>
+            </div>
+
+            <div id="resetPasswordForm" class="hidden">
+                <h2 style="text-align: center; margin-bottom: 20px;">Create New Password</h2>
+                <p style="text-align: center; color: #666; margin-bottom: 20px;">
+                    Enter your new password below.
+                </p>
+                <div class="form-group">
+                    <label>New Password:</label>
+                    <input type="password" id="newResetPassword">
+                </div>
+                <div class="form-group">
+                    <label>Confirm New Password:</label>
+                    <input type="password" id="confirmResetPassword">
+                </div>
+                <button class="btn" onclick="resetPassword()">Reset Password</button>
+                <div id="resetPasswordStatus" class="status"></div>
+            </div>
+        </div>
+
+        <div id="mainPortal" class="hidden">
+            <div class="profile-header">
+                <div class="profile-meta">
+                    <div class="profile-name-row">
+                        <span class="profile-name" id="profileName"></span>
+                        <div class="profile-rank hidden" id="profileRank">
+                            <span class="rank-badge-large" id="rankDisplay">#--</span>
+                            <span class="rank-text" id="rankDetails"></span>
+                        </div>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchMainTab('today')">Today's Test</button>
+                <button class="tab" onclick="switchMainTab('leaderboard')">Leaderboard</button>
+                <button class="tab" onclick="switchMainTab('history')">Score History</button>
+                <button class="tab" onclick="switchMainTab('profile')">Profile</button>
+            </div>
+
+            <div id="todayTab" class="tab-content active">
+                <div id="resumeTestBanner" class="resume-test-banner" style="display: none;">
+                    <h3>Resume Your Test</h3>
+                    <p>You have an active test for Day <span id="resumeDay"></span>. Click below to resume.</p>
+                    <button class="btn" onclick="resumeTest()">Resume Test</button>
+                </div>
+                <div id="testStatus"></div>
+            </div>
+
+            <div id="leaderboardTab" class="tab-content">
+                <h2 style="margin-bottom: 20px;">Top 10 Leaderboard</h2>
+                <p style="color: #666; margin-bottom: 20px;"></p>
+                <div id="leaderboardContainer">
+                    <p style="color: #666; text-align: center;">Loading leaderboard...</p>
+                </div>
+            </div>
+
+            <div id="historyTab" class="tab-content">
+                <h2 style="margin-bottom: 20px;">Your Score History</h2>
+                <div id="historyContainer"></div>
+            </div>
+
+            <div id="profileTab" class="tab-content">
+                <h2 style="margin-bottom: 20px;">Profile Settings</h2>
+                <div class="form-group">
+                    <label>Name:</label>
+                    <input type="text" id="profileNameInput" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" id="profileEmailInput" readonly>
+                </div>
+                <hr style="margin: 30px 0; border: none; border-top: 2px solid #E3E3E3;">
+                <h3 style="margin-bottom: 20px;">Change Password</h3>
+                <div class="form-group">
+                    <label>Current Password:</label>
+                    <input type="password" id="currentPassword">
+                </div>
+                <div class="form-group">
+                    <label>New Password:</label>
+                    <input type="password" id="newPassword">
+                </div>
+                <div class="form-group">
+                    <label>Confirm New Password:</label>
+                    <input type="password" id="confirmNewPassword">
+                </div>
+                <button class="btn" onclick="changePassword()">Update Password</button>
+                <div id="profileStatus" class="status"></div>
+            </div>
+        </div>
+
+        <div id="questionSection" class="question-section">
+            <div class="timer" id="timer">Time Remaining: 2:00:00</div>
+
+            <div style="text-align: center; margin-bottom: 30px;">
+                <div style="font-size: 2.5em; font-weight: bold; color: #EA5A2F; margin-bottom: 10px;" id="testTitle">
+                    D.PotD Day 1</div>
+            </div>
+
+            <div id="navigationBar"
+                style="display: none; background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+                <div style="display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap;">
+                    <button class="question-nav-btn" onclick="showQuestion(0)" id="navBtn0"
+                        style="padding: 10px 20px; border: 2px solid #E3E3E3; background: white; border-radius: 6px; cursor: pointer; font-weight: 600;">I</button>
+                    <button class="question-nav-btn" onclick="showQuestion(1)" id="navBtn1"
+                        style="padding: 10px 20px; border: 2px solid #E3E3E3; background: white; border-radius: 6px; cursor: pointer; font-weight: 600;">1</button>
+                    <button class="question-nav-btn" onclick="showQuestion(2)" id="navBtn2"
+                        style="padding: 10px 20px; border: 2px solid #E3E3E3; background: white; border-radius: 6px; cursor: pointer; font-weight: 600;">2</button>
+                    <button class="question-nav-btn" onclick="showQuestion(3)" id="navBtn3"
+                        style="padding: 10px 20px; border: 2px solid #E3E3E3; background: white; border-radius: 6px; cursor: pointer; font-weight: 600;">3</button>
+                    <div style="width: 2px; height: 30px; background: #E3E3E3; margin: 0 10px;"></div>
+                    <button class="btn" onclick="nextQuestion()" id="nextBtn"
+                        style="width: auto; padding: 10px 30px; margin: 0;">Next</button>
+                    <button class="btn" onclick="submitTest()" id="submitBtn"
+                        style="width: auto; padding: 10px 30px; margin: 0; background: #28a745;">Submit
+                        Test</button>
+                </div>
+            </div>
+
+            <div id="instructionsPage" style="display: none;">
+                <div class="question-box">
+                    <h2>Instructions</h2>
+                    <div id="instructionsContent" style="color:#333; font-size:1.05em; line-height:1.6;"></div>
+                    <div style="text-align:center; margin-top:20px;">
+                        <button class="btn" onclick="nextQuestion()" style="max-width:300px;">Proceed to Question
+                            1</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="q1Page" style="display: none;">
+                <div class="question-box">
+                    <h2>Question 1</h2>
+                    <p id="q1Text"></p>
+                    <img id="q1Image" class="question-image" style="display: none;">
+                    <input type="text" id="q1Answer" placeholder="Your answer (numbers only)">
+                </div>
+                <div id="q1Status" class="status"></div>
+            </div>
+
+            <div id="q2Page" style="display: none;">
+                <div class="question-box">
+                    <h2>Question 2</h2>
+                    <p id="q2Text"></p>
+                    <img id="q2Image" class="question-image" style="display: none;">
+                    <input type="text" id="q2Answer" placeholder="Your answer (numbers only)">
+                </div>
+                <div id="q2Status" class="status"></div>
+            </div>
+
+            <div id="q3Page" style="display: none;">
+                <div class="question-box">
+                    <h2>Question 3</h2>
+                    <p id="q3Text"></p>
+                    <img id="q3Image" class="question-image" style="display: none;">
+                </div>
+                <div class="latex-editor-container">
+                    <div class="latex-input-section">
+                        <h3>LaTeX Code</h3>
+                        <textarea id="latexInput" placeholder="Write your proof using LaTeX here..."></textarea>
+                    </div>
+                    <div class="latex-preview-section">
+                        <h3>Live Preview</h3>
+                        <div id="latexPreview">Your formatted proof will appear here...</div>
+                    </div>
+                </div>
+
+                <div id="q3Status" class="status"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sponsor-footer">
+        <span class="sponsor-label">Proudly Sponsored By</span>
+        <div class="sponsor-logos">
+            <a href="https://artofproblemsolving.com" target="_blank" rel="noopener noreferrer">
+                <img src="https://artofproblemsolving.com/assets/images/logos/aops-logo-full.png"
+                    alt="Art of Problem Solving" style="height: 40px;">
+            </a>
+        </div>
+    </div>
+
+    <!-- Submission Summary Modal -->
+    <div id="submissionSummaryModal" class="confirmation-modal">
+        <div class="confirmation-content">
+            <h2>Ready to Submit?</h2>
+            <p>Here is the status of your answers:</p>
+            <ul id="submissionSummaryList" style="list-style: none; padding: 0;">
+                <!-- Populated by JS -->
+            </ul>
+            <p style="margin-top: 15px; color: #666; font-size: 0.9em;">
+                Once submitted, you cannot edit your answers.
+            </p>
+            <div class="confirmation-buttons">
+                <button class="confirm-btn cancel" onclick="closeSubmissionSummary()">Go Back</button>
+                <button class="confirm-btn start" onclick="confirmSubmission()">Submit Test</button>
+            </div>
+        </div>
     </div>
     <script src="student-firebase.js"></script>
 </body>
