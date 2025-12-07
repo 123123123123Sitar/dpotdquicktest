@@ -1,48 +1,19 @@
 {
-    "rewrites": [
-        {
-            "source": "/admin.html",
-            "destination": "/public/admin.html"
-        },
-        {
-            "source": "/grader.html",
-            "destination": "/public/grader.html"
-        },
-        {
-            "source": "/student.html",
-            "destination": "/public/student.html"
-        },
-        {
-            "source": "/admin",
-            "destination": "/public/admin.html"
-        },
-        {
-            "source": "/grader",
-            "destination": "/public/grader.html"
-        },
-        {
-            "source": "/styles.css",
-            "destination": "/public/styles.css"
-        },
-        {
-            "source": "/firebase-config.js",
-            "destination": "/public/firebase-config.js"
-        },
-        {
-            "source": "/admin-firebase.js",
-            "destination": "/public/admin-firebase.js"
-        },
-        {
-            "source": "/grader-firebase.js",
-            "destination": "/public/grader-firebase.js"
-        },
-        {
-            "source": "/student-firebase.js",
-            "destination": "/public/student-firebase.js"
-        },
-        {
-            "source": "/",
-            "destination": "/public/student.html"
-        }
-    ]
+  "version": 2,
+  "routes": [
+    { "src": "/admin.html", "dest": "/public/admin.html" },
+    { "src": "/grader.html", "dest": "/public/grader.html" },
+    { "src": "/student.html", "dest": "/public/student.html" },
+
+    { "src": "/admin", "dest": "/public/admin.html" },
+    { "src": "/grader", "dest": "/public/grader.html" },
+
+    { "src": "/styles.css", "dest": "/public/styles.css" },
+    { "src": "/firebase-config.js", "dest": "/public/firebase-config.js" },
+    { "src": "/admin-firebase.js", "dest": "/public/admin-firebase.js" },
+    { "src": "/grader-firebase.js", "dest": "/public/grader-firebase.js" },
+    { "src": "/student-firebase.js", "dest": "/public/student-firebase.js" },
+
+    { "src": "/", "dest": "/public/student.html" }
+  ]
 }
