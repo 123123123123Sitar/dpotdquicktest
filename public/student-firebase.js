@@ -110,16 +110,8 @@ appAuth.onAuthStateChanged(async (user) => {
         currentUser = null;
         localStorage.removeItem('dpotdUser');
         const mainPortal = document.getElementById('mainPortal');
-        const authScreen = document.getElementById('authScreen');
-        if (mainPortal) {
-            mainPortal.style.display = 'none';
-            mainPortal.classList.add('hidden');
-        }
-        if (authScreen) {
-            authScreen.style.display = 'block';
-            authScreen.classList.remove('hidden');
-        }
-        if (!mainPortal) pendingMainRender = true;
+        if (mainPortal) mainPortal.style.display = 'none';
+        else pendingMainRender = true;
         return;
     }
 
@@ -168,18 +160,6 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     if (appAuth.currentUser && currentUser) {
         showMainPortal();
-    } else if (pendingMainRender && !currentUser) {
-        // If we deferred rendering but have no user, show login screen explicit
-        const authScreen = document.getElementById('authScreen');
-        const mainPortal = document.getElementById('mainPortal');
-        if (authScreen) {
-            authScreen.style.display = 'block';
-            authScreen.classList.remove('hidden');
-        }
-        if (mainPortal) {
-            mainPortal.style.display = 'none';
-            mainPortal.classList.add('hidden');
-        }
     }
     if (pendingMainRender && currentUser) showMainPortal();
     startStatusKeepalive();
