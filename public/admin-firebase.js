@@ -244,7 +244,12 @@ async function removeGrader(graderId) {
 
 async function autoAssignSubmissions() {
     if (cachedGraders.length === 0) return alert('No graders available');
-    const pending = cachedSubmissions.filter(s => !s.gradingStatus || s.gradingStatus === 'pending');
+    const pending = cachedSubmissions.filter(s =>
+        (!s.gradingStatus || s.gradingStatus === 'pending') &&
+        s.gradingStatus !== 'human_graded' &&
+        s.gradingStatus !== 'ai_graded' &&
+        s.gradingStatus !== 'assigned'
+    );
     if (pending.length === 0) return alert('No pending submissions');
     if (!confirm('Assign ' + pending.length + ' submissions to ' + cachedGraders.length + ' graders?')) return;
     let idx = 0;
