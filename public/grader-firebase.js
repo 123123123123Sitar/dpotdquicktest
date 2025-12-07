@@ -19,8 +19,23 @@ appAuth.onAuthStateChanged(async function (user) {
 
     // Check if user is a grader
     try {
+        console.log('Checking grader status for user:', user.uid, user.email);
         const userDoc = await firestore.collection('users').doc(user.uid).get();
-        if (!userDoc.exists || !userDoc.data().isGrader) {
+
+        if (!userDoc.exists) {
+            console.error('User document does not exist for:', user.uid);
+            document.getElementById('loginError').textContent = 'User profile not found';
+            document.getElementById('loginError').style.display = 'block';
+            await appAuth.signOut();
+            return;
+        }
+
+        const userData = userDoc.data();
+        console.log('User data:', userData);
+
+        // Check if grader OR admin (admins can also use grader portal)
+        if (!userData.isGrader && !userData.isAdmin) {
+            console.error('User is not a grader:', userData);
             document.getElementById('loginError').textContent = 'Not authorized as grader';
             document.getElementById('loginError').style.display = 'block';
             await appAuth.signOut();
@@ -30,7 +45,7 @@ appAuth.onAuthStateChanged(async function (user) {
         currentGrader = {
             uid: user.uid,
             email: user.email,
-            name: userDoc.data().name || user.email
+            name: userData.name || user.email
         };
 
         document.getElementById('loginScreen').style.display = 'none';
@@ -40,7 +55,7 @@ appAuth.onAuthStateChanged(async function (user) {
         loadStats();
     } catch (e) {
         console.error('Auth error:', e);
-        document.getElementById('loginError').textContent = 'Error checking credentials';
+        document.getElementById('loginError').textContent = 'Error checking credentials: ' + e.message;
         document.getElementById('loginError').style.display = 'block';
     }
 });
