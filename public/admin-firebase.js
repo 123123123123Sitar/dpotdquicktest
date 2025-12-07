@@ -597,6 +597,16 @@ function displayCurrentSubmission() {
     const total = q1P + q2P + parseInt(sub.q3_score || 0);
     const id = sub.id;
     const statusBadge = sub.gradingStatus === 'human_graded' ? 'Graded' : (sub.gradingStatus === 'ai_graded' ? 'AI Graded' : 'Pending');
+
+    // Clean LaTeX for display
+    let cleanAnswer = sub.q3_answer || '';
+    cleanAnswer = cleanAnswer.replace(/\\documentclass(\[[^\]]*\])?\{[^}]+\}/g, '')
+        .replace(/\\usepackage(\[[^\]]*\])?\{[^}]+\}/g, '')
+        .replace(/\\begin\{document\}/g, '')
+        .replace(/\\end\{document\}/g, '')
+        .trim();
+    if (!cleanAnswer) cleanAnswer = 'No answer provided';
+
     container.innerHTML = '<div class="submission-card" style="margin-top: 20px;">' +
         '<div class="submission-header" style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee;">' +
         '<h3>Day ' + sub.day + '</h3><span class="graded-badge ' + (sub.q3_score ? 'graded' : 'pending') + '">' + statusBadge + '</span></div>' +
@@ -608,8 +618,8 @@ function displayCurrentSubmission() {
         '<div class="question-group"><h3>Q1</h3><p>' + (escapeHtml(sub.q1_answer) || 'No answer') + '</p><p><strong>' + (sub.q1_correct ? 'Correct (+4)' : 'Incorrect') + '</strong></p></div>' +
         '<div class="question-group"><h3>Q2</h3><p>' + (escapeHtml(sub.q2_answer) || 'No answer') + '</p><p><strong>' + (sub.q2_correct ? 'Correct (+6)' : 'Incorrect') + '</strong></p></div>' +
         '<div class="question-group"><h3>Q3 (Proof)</h3>' +
-        '<div class="answer-text" style="background:#f9f9f9; padding:15px; border-radius:4px; margin-bottom:15px; white-space:pre-wrap; border:1px solid #eee;">' +
-        (escapeHtml(sub.q3_answer) || 'No answer provided') +
+        '<div id="adminStudentAnswer_' + id + '" class="answer-text" style="background:#f9f9f9; padding:15px; border-radius:4px; margin-bottom:15px; white-space:pre-wrap; border:1px solid #eee;">' +
+        cleanAnswer +
         '</div>' +
         '<div class="latex-editor-container">' +
         '<div class="latex-input-section"><h4>Score (0-10)</h4><input type="number" id="score_' + id + '" min="0" max="10" value="' + (sub.q3_score || '') + '">' +
@@ -621,7 +631,19 @@ function displayCurrentSubmission() {
         '<button class="btn" onclick="saveFeedback(\'' + id + '\')">Save Feedback</button>' +
         '<button class="btn" onclick="sendNotification(\'' + id + '\')">Notify</button>' +
         '</div></div></div>';
-    if (sub.q3_feedback) setTimeout(function () { updateLatexPreview(id); }, 100);
+
+    // Trigger MathJax
+    if (window.MathJax && window.MathJax.typesetPromise) {
+        // Typeset both the student answer and the feedback preview
+        const toTypeset = [document.getElementById('adminStudentAnswer_' + id)];
+        const fbPreview = document.getElementById('feedback_preview_' + id);
+        if (fbPreview) toTypeset.push(fbPreview);
+
+        MathJax.typesetPromise(toTypeset).catch(function (err) { console.log('MathJax error', err); });
+    } else if (sub.q3_feedback) {
+        // Fallback for just preview update if MathJax not fully ready/structured
+        setTimeout(function () { updateLatexPreview(id); }, 100);
+    }
 }
 
 async function saveFeedback(docId) {
