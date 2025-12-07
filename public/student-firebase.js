@@ -1466,4 +1466,5 @@ function renderQuestions(q) {
         }, 50);
     }
 }
+console.log('Student Portal Logic Loaded');
 
