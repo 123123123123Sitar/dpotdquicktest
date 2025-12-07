@@ -130,14 +130,14 @@ async function callGeminiAPI(prompt, apiKey) {
  * Parse Gemini's JSON response with fallback handling
  */
 function parseGradingResponse(text) {
-    // Try to extract JSON from the response
-    // Aggressive JSON extraction
-    let jsonStr = text;
+    console.log('Raw Gemini response:', text);
+
+    let jsonStr = text || '';
 
     // 1. Try extracting from code blocks first
-    const codeBlockMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/);
+    const codeBlockMatch = jsonStr.match(/```(?:json)?\s*([\s\S]*?)```/);
     if (codeBlockMatch) {
-        jsonStr = codeBlockMatch[1];
+        jsonStr = codeBlockMatch[1].trim();
     }
 
     // 2. Find the *first* opening brace and *last* closing brace
@@ -147,6 +147,13 @@ function parseGradingResponse(text) {
     if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
         jsonStr = jsonStr.substring(firstBrace, lastBrace + 1);
     }
+
+    // 3. Clean up common issues in JSON
+    jsonStr = jsonStr
+        .replace(/,\s*}/g, '}')  // Remove trailing commas
+        .replace(/,\s*]/g, ']')  // Remove trailing commas in arrays
+        .replace(/[\u201C\u201D]/g, '"')  // Replace curly quotes
+        .replace(/[\u2018\u2019]/g, "'"); // Replace curly apostrophes
 
     try {
         const parsed = JSON.parse(jsonStr);
@@ -165,11 +172,30 @@ function parseGradingResponse(text) {
             rubricBreakdown: parsed.rubricBreakdown || {}
         };
     } catch (e) {
-        // Fallback: try to extract score from text
-        const scoreMatch = text.match(/score[:\s]*(\d+)/i);
+        console.log('JSON parse failed, attempting regex extraction. Error:', e.message);
+
+        // Fallback: try to extract score and feedback from text
+        const scoreMatch = text.match(/["']?score["']?\s*[:=]\s*(\d+)/i);
+        const feedbackMatch = text.match(/["']?feedback["']?\s*[:=]\s*["']([^"']+)["']/i);
+
+        const score = scoreMatch ? Math.min(10, parseInt(scoreMatch[1], 10)) : 5;
+        let feedback = feedbackMatch ? feedbackMatch[1] : '';
+
+        // If no feedback found, try to extract any sensible text
+        if (!feedback) {
+            // Look for feedback-like content
+            const lines = text.split('\n').filter(line =>
+                line.trim().length > 20 &&
+                !line.includes('{') &&
+                !line.includes('}') &&
+                !line.toLowerCase().includes('json')
+            );
+            feedback = lines.length > 0 ? lines[0].trim() : 'Review submitted work for accuracy and completeness.';
+        }
+
         return {
-            score: scoreMatch ? Math.min(10, parseInt(scoreMatch[1], 10)) : 5,
-            feedback: 'Unable to parse AI feedback. Please review manually.',
+            score,
+            feedback,
             confidence: 'low',
             rubricBreakdown: {}
         };
