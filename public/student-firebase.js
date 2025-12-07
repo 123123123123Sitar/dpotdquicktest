@@ -168,6 +168,18 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     if (appAuth.currentUser && currentUser) {
         showMainPortal();
+    } else if (pendingMainRender && !currentUser) {
+        // If we deferred rendering but have no user, show login screen explicit
+        const authScreen = document.getElementById('authScreen');
+        const mainPortal = document.getElementById('mainPortal');
+        if (authScreen) {
+            authScreen.style.display = 'block';
+            authScreen.classList.remove('hidden');
+        }
+        if (mainPortal) {
+            mainPortal.style.display = 'none';
+            mainPortal.classList.add('hidden');
+        }
     }
     if (pendingMainRender && currentUser) showMainPortal();
     startStatusKeepalive();
@@ -1209,24 +1221,30 @@ function updateLatexPreview() {
         }
 
         let content = input;
-        // Strip preamble commands (handle optional args like [12pt] and whitespace)
-        content = content.replace(/\\documentclass(\[[^\]]*\])?\s*\{[^}]+\}/g, '');
-        content = content.replace(/\\usepackage(\[[^\]]*\])?\s*\{[^}]+\}/g, '');
 
-        // Strip metadata
-        content = content.replace(/\\title\{[^}]*\}/g, '');
-        content = content.replace(/\\author\{[^}]*\}/g, '');
-        content = content.replace(/\\date\{[^}]*\}/g, '');
-        content = content.replace(/\\maketitle/g, '');
-
-        // Try to extract document body
+        // 1. Try to extract the document body first (most reliable)
         const docMatch = content.match(/\\begin\s*\{document\}([\s\S]*?)\\end\s*\{document\}/);
         if (docMatch) {
             content = docMatch[1];
         } else {
-            // Fallback: just remove the tags if they exist individually to prevent "Unknown environment" error
-            content = content.replace(/\\begin\s*\{document\}/g, '');
-            content = content.replace(/\\end\s*\{document\}/g, '');
+            // 2. Fallback: Line-by-line cleaner to remove preamble if body extraction failed
+            // Split into lines
+            let lines = content.split('\n');
+            // Filter out lines that look like preamble/metadata
+            lines = lines.filter(line => {
+                const l = line.trim();
+                if (l.startsWith('\\documentclass')) return false;
+                if (l.startsWith('\\usepackage')) return false;
+                if (l.startsWith('\\title')) return false;
+                if (l.startsWith('\\author')) return false;
+                if (l.startsWith('\\date')) return false;
+                if (l.startsWith('\\maketitle')) return false;
+                // Also remove loose document tags if they weren't matched in step 1
+                if (l.includes('\\begin{document}')) return false;
+                if (l.includes('\\end{document}')) return false;
+                return true;
+            });
+            content = lines.join('\n');
         }
 
         content = content.trim();
