@@ -770,7 +770,7 @@ async function enterFullscreenAndStart(questionNum) {
 
     const profileRank = document.getElementById('profileRank');
     if (profileRank) profileRank.classList.add('hidden');
-    document.body.classList.add('locked');
+    // REMOVED locked class to disable banner/scroll lock
     testActive = true;
     monitorFullscreen();
     // timing will be set when each question is shown
