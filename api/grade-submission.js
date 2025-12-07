@@ -9,9 +9,24 @@
 
 // Gemini API configuration with fallback models
 const GEMINI_ENDPOINTS = [
+    // 2.5 generation
+    { version: 'v1beta', model: 'gemini-2.5-flash' },
+    { version: 'v1beta', model: 'gemini-2.5-pro' },
+    { version: 'v1beta', model: 'gemini-2.5-flash-lite' },
+    // 2.0 generation
+    { version: 'v1beta', model: 'gemini-2.0-flash' },
+    // 1.x generation
     { version: 'v1beta', model: 'gemini-1.5-flash' },
     { version: 'v1beta', model: 'gemini-1.5-pro' },
     { version: 'v1beta', model: 'gemini-1.0-pro' },
+    { version: 'v1beta', model: 'gemini-pro' },
+    // Mirror the same list on v1 endpoints (some keys surface models there)
+    { version: 'v1', model: 'gemini-2.5-flash' },
+    { version: 'v1', model: 'gemini-2.5-pro' },
+    { version: 'v1', model: 'gemini-2.5-flash-lite' },
+    { version: 'v1', model: 'gemini-2.0-flash' },
+    { version: 'v1', model: 'gemini-1.5-flash' },
+    { version: 'v1', model: 'gemini-1.5-pro' },
     { version: 'v1', model: 'gemini-1.0-pro' },
     { version: 'v1', model: 'gemini-pro' }
 ];
