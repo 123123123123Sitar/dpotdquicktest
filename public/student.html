@@ -18,27 +18,6 @@
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
     <style>
-        #loginScreen {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .login-box h1 {
-            color: #667eea;
-            font-size: 36px;
-        }
-
-        .login-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .login-btn:hover {
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
         .day-selector {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -57,17 +36,17 @@
         }
 
         .day-btn:hover {
-            border-color: #667eea;
+            border-color: #EA5A2F;
         }
 
         .day-btn.active {
-            background: #667eea;
+            background: #EA5A2F;
             color: white;
-            border-color: #667eea;
+            border-color: #EA5A2F;
         }
 
         .day-btn.completed {
-            background: #d4edda;
+            background: #fde8e0;
             border-color: #EA5A2F;
         }
 
@@ -91,11 +70,11 @@
             border-radius: 12px;
             padding: 25px;
             margin-bottom: 20px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #EA5A2F;
         }
 
         .question-card h3 {
-            color: #667eea;
+            color: #EA5A2F;
             margin-bottom: 15px;
         }
 
@@ -115,7 +94,8 @@
         }
 
         .answer-input:focus {
-            border-color: #667eea;
+            border-color: #EA5A2F;
+            outline: none;
         }
 
         textarea.answer-input {
@@ -147,8 +127,8 @@
         }
 
         .score-badge.good {
-            background: #d4edda;
-            color: #155724;
+            background: #fde8e0;
+            color: #EA5A2F;
         }
 
         .score-badge.average {
@@ -234,7 +214,7 @@
                 </div>
                 <div id="testContainer" class="card hidden">
                     <div id="instructions"
-                        style="margin-bottom:20px;padding:15px;background:#e8f4fd;border-radius:8px;color:#0c5460;">
+                        style="margin-bottom:20px;padding:15px;background:#fde8e0;border-radius:8px;color:#EA5A2F;">
                     </div>
                     <div id="questionsContainer"></div>
                     <div style="margin-top:30px;text-align:center;">
