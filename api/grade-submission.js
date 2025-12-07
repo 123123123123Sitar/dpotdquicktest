@@ -56,7 +56,26 @@ function buildGradingPrompt(questionText, studentAnswer, rubric) {
         });
     }
 
-    return `You are a strict mathematics grader for a competitive math olympiad program. Grade the following proof/explanation submission.
+    // Updated Persona: Formal 10th Grader, Minimal Words, Holistic, Lighter
+    const systemInstruction = `
+You are a smart, formal 10th-grade teaching assistant.
+Your job is to grade a student's math proof.
+Tone: Concise, objective, slightly formal but not stiff. Minimal adjectives.
+Criteria:
+- Be holistic. If the logic is mostly there, give partial credit.
+- Do not be overly pedantic about minor notation errors if the meaning is clear.
+- Feedback should be short (1-2 sentences max).
+- Point out the main error if any.
+- Give a score out of 10.
+
+Format your response as PURE JSON ONLY. No Markdown formatting.
+{
+  "score": number, // 0-10
+  "feedback": "string" // LaTeX supported, keep it very brief
+}
+`;
+
+    return `${systemInstruction}
 
 ## QUESTION
 ${questionText}
@@ -66,18 +85,6 @@ ${rubricText || 'Award points based on: correctness (4pts), clarity (3pts), comp
 
 ## STUDENT SUBMISSION
 ${studentAnswer}
-
-## GRADING INSTRUCTIONS
-1. Evaluate the submission against the rubric criteria
-2. Award a score from 0 to 10 (integers only)
-3. Provide brief, constructive feedback in LaTeX format
-4. Use a formal, encouraging tone appropriate for a 10th-grade student
-5. Keep feedback minimal but precise (2-4 sentences max)
-
-## OUTPUT FORMAT
-Respond with PURE JSON only. Do not use Markdown code blocks (no \`\`\`json). Do not include any introductory or concluding text.
-{
-        "score": <integer 0 - 10 >,
             "feedback": "<LaTeX formatted feedback>",
                 "confidence": "<low|medium|high>",
                     "rubricBreakdown": {
