@@ -38,15 +38,26 @@ module.exports = async function handler(req, res) {
 
     try {
         const { email } = req.body;
+        console.log(`[Password Reset] Request received for: ${email}`);
 
         if (!email) {
+            console.error('[Password Reset] Error: Email is missing from request body');
             return res.status(400).json({ error: 'Email is required' });
         }
 
+        // Check Gmail Config
+        if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+            console.error('[Password Reset] Error: Gmail credentials missing in env vars');
+            return res.status(500).json({ error: 'Server configuration error: Missing SMTP credentials' });
+        }
+
         // Generate password reset link using Firebase Admin SDK
+        console.log('[Password Reset] Generating link via Firebase Admin SDK...');
         const link = await admin.auth().generatePasswordResetLink(email);
+        console.log('[Password Reset] Link generated successfully.');
 
         // Send custom email via Nodemailer
+        console.log(`[Password Reset] Creating transport for ${process.env.GMAIL_USER}...`);
         const transporter = createTransporter();
 
         const html = `
@@ -109,12 +120,19 @@ module.exports = async function handler(req, res) {
             text: `Reset your D.PotD password by visiting: ${link}`
         };
 
-        await transporter.sendMail(mailOptions);
+        console.log(`[Password Reset] Attempting to send email to ${email}...`);
+        const info = await transporter.sendMail(mailOptions);
+        console.log('[Password Reset] Email sent successfully. MessageID:', info.messageId);
 
         return res.status(200).json({ success: true, message: 'Password reset email sent' });
 
     } catch (error) {
-        console.error('Password reset error:', error);
-        return res.status(500).json({ error: error.message || 'Failed to send password reset email' });
+        console.error('[Password Reset] CRITICAL ERROR:', error);
+
+        // Return detailed error if possible for debugging (remove in prod if needed, but useful now)
+        return res.status(500).json({
+            error: error.message || 'Failed to send password reset email',
+            details: error.toString()
+        });
     }
 };
