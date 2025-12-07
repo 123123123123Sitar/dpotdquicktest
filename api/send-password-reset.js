@@ -53,8 +53,18 @@ module.exports = async function handler(req, res) {
 
         // Generate password reset link using Firebase Admin SDK
         console.log('[Password Reset] Generating link via Firebase Admin SDK...');
-        const link = await admin.auth().generatePasswordResetLink(email);
-        console.log('[Password Reset] Link generated successfully.');
+
+        // Determine return URL from request or default
+        // const returnUrl = req.headers.origin || 'https://dpotd-app.firebaseapp.com';
+
+        // Force the firebaseapp domain for now to ensure standard handler
+        const actionCodeSettings = {
+            url: 'https://dpotd-app.firebaseapp.com/student.html',
+            handleCodeInApp: false
+        };
+
+        const link = await admin.auth().generatePasswordResetLink(email, actionCodeSettings);
+        console.log('[Password Reset] Link generated successfully:', link);
 
         // Send custom email via Nodemailer
         console.log(`[Password Reset] Creating transport for ${process.env.GMAIL_USER}...`);
