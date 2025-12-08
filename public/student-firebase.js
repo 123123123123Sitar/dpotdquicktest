@@ -1068,19 +1068,26 @@ async function confirmSubmission(isForced = false) {
             timestamp: endTime,
             exitCount: exitCount || 0,
             exitLogs: sanitizedExitLogs,
-            graded: (q3Score !== null) // if AI graded it, mark as graded? Or keep manual review? 
-            // Usually we mark as 'pending' for manual review, but if AI is trusted we can mark graded.
-            // Let's assume mixed approach: AI gives preliminary score.
+            graded: (q3Score !== null)
         });
 
         // Clean up active test
         await firestore.collection('activeTests').doc(`${currentUser.uid}_day${currentDay}`).delete();
 
         hideLoading();
+
+        // Successfully submitted - reload to show main portal with "already submitted" message
+        alert('Test submitted successfully!');
+        window.location.reload();
+
     } catch (error) {
         hideLoading();
         alert('Error submitting test: ' + error.message + '\n\nPlease contact your administrator.');
         testActive = true;
+        // Re-enter fullscreen to continue test
+        try {
+            if (document.documentElement.requestFullscreen) await document.documentElement.requestFullscreen();
+        } catch (e) { /* ignore */ }
     }
 }
 
