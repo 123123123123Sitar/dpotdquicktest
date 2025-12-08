@@ -1450,20 +1450,76 @@ function formatRichText(raw) {
     if (!raw) return '';
     let html = String(raw);
 
+    // Remove LaTeX document preamble/structure commands (not needed for web)
+    html = html.replace(/\\documentclass(\[[^\]]*\])?\{[^}]*\}/g, '');
+    html = html.replace(/\\usepackage(\[[^\]]*\])?\{[^}]*\}/g, '');
+    html = html.replace(/\\geometry\{[^}]*\}/g, '');
+    html = html.replace(/\\pagestyle\{[^}]*\}/g, '');
+    html = html.replace(/\\fancyhead(\[[^\]]*\])?\{[^}]*\}/g, '');
+    html = html.replace(/\\fancyfoot(\[[^\]]*\])?\{[^}]*\}/g, '');
+    html = html.replace(/\\begin\{document\}/g, '');
+    html = html.replace(/\\end\{document\}/g, '');
+    html = html.replace(/\\maketitle/g, '');
+    html = html.replace(/\\title\{([^}]*)\}/g, '<h1 style="text-align:center;">$1</h1>');
+    html = html.replace(/\\author\{([^}]*)\}/g, '<p style="text-align:center;color:#666;">$1</p>');
+    html = html.replace(/\\date\{[^}]*\}/g, '');
+
+    // Sections
+    html = html.replace(/\\section\*?\{([^}]*)\}/g, '<h2 style="margin-top:20px;margin-bottom:10px;color:#EA5A2F;">$1</h2>');
+    html = html.replace(/\\subsection\*?\{([^}]*)\}/g, '<h3 style="margin-top:15px;margin-bottom:8px;">$1</h3>');
+    html = html.replace(/\\subsubsection\*?\{([^}]*)\}/g, '<h4 style="margin-top:10px;margin-bottom:5px;">$1</h4>');
+
+    // List environments
     function buildList(body, tag) {
         const items = body.split(/\\item/g).map(s => s.trim()).filter(Boolean);
         if (!items.length) return body;
-        return `<${tag}>${items.map(i => `<li>${i}</li>`).join('')}</${tag}>`;
+        return `<${tag} style="margin:10px 0;padding-left:25px;">${items.map(i => `<li style="margin:5px 0;">${i}</li>`).join('')}</${tag}>`;
     }
 
     html = html.replace(/\\begin\{itemize\}([\s\S]*?)\\end\{itemize\}/g, (_, body) => buildList(body, 'ul'));
     html = html.replace(/\\begin\{enumerate\}([\s\S]*?)\\end\{enumerate\}/g, (_, body) => buildList(body, 'ol'));
-    html = html.replace(/(^|[^$])\\textbf\{([^}]*)\}/g, '$1<strong>$2</strong>');
-    html = html.replace(/(^|[^$])\\textit\{([^}]*)\}/g, '$1<em>$2</em>');
-    html = html.replace(/(^|[^$])\\underline\{([^}]*)\}/g, '$1<u>$2</u>');
-    html = html.replace(/\\vspace\{([^}]+)\}/g, (_, val) => `<div style="height:${val};"></div>`);
+
+    // Alignment environments
+    html = html.replace(/\\begin\{center\}([\s\S]*?)\\end\{center\}/g, '<div style="text-align:center;">$1</div>');
+    html = html.replace(/\\begin\{flushright\}([\s\S]*?)\\end\{flushright\}/g, '<div style="text-align:right;">$1</div>');
+    html = html.replace(/\\begin\{flushleft\}([\s\S]*?)\\end\{flushleft\}/g, '<div style="text-align:left;">$1</div>');
+
+    // Quote/proof environments
+    html = html.replace(/\\begin\{quote\}([\s\S]*?)\\end\{quote\}/g, '<blockquote style="margin:15px 30px;padding:10px;border-left:3px solid #EA5A2F;background:#f8f9fa;">$1</blockquote>');
+    html = html.replace(/\\begin\{proof\}([\s\S]*?)\\end\{proof\}/g, '<div style="margin:15px 0;padding:10px;border-left:3px solid #28a745;background:#f0fff0;"><strong>Proof:</strong>$1 ∎</div>');
+
+    // Text formatting
+    html = html.replace(/\\textbf\{([^}]*)\}/g, '<strong>$1</strong>');
+    html = html.replace(/\\textit\{([^}]*)\}/g, '<em>$1</em>');
+    html = html.replace(/\\underline\{([^}]*)\}/g, '<u>$1</u>');
+    html = html.replace(/\\emph\{([^}]*)\}/g, '<em>$1</em>');
+    html = html.replace(/\\textrm\{([^}]*)\}/g, '$1');
+    html = html.replace(/\\textsf\{([^}]*)\}/g, '$1');
+    html = html.replace(/\\texttt\{([^}]*)\}/g, '<code>$1</code>');
+
+    // Spacing
+    html = html.replace(/\\vspace\{([^}]+)\}/g, '<div style="height:$1;"></div>');
+    html = html.replace(/\\hspace\{[^}]+\}/g, '&nbsp;&nbsp;');
+    html = html.replace(/\\quad/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
+    html = html.replace(/\\qquad/g, '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+    html = html.replace(/\\\\/g, '<br>');
+    html = html.replace(/\\newline/g, '<br>');
+    html = html.replace(/\\par/g, '<br><br>');
+
+    // Special characters
+    html = html.replace(/\\ldots/g, '…');
+    html = html.replace(/\\dots/g, '…');
+    html = html.replace(/---/g, '—');
+    html = html.replace(/--/g, '–');
+
+    // Remove any remaining unknown commands that might cause issues
+    html = html.replace(/\\[a-zA-Z]+\{[^}]*\}/g, ''); // Remove unknown \command{...}
+    html = html.replace(/\\[a-zA-Z]+/g, ''); // Remove unknown \command
+
+    // Paragraphs
     html = html.replace(/\n{2,}/g, '<br><br>');
-    return html;
+
+    return html.trim();
 }
 
 // Ensure renderQuestions displays instructions and includes instructions in MathJax typeset
