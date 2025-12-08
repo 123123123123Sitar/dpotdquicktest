@@ -343,6 +343,15 @@
 
         .question-section {
             display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #f8f9fa;
+            padding: 80px 40px 40px;
+            overflow-y: auto;
+            z-index: 100;
         }
 
         .question-box {
@@ -1005,19 +1014,30 @@
     </div>
 
     <div class="confirmation-modal" id="confirmationModal">
-        <div class="confirmation-content">
-            <h2>Test Rules &amp; Confirmation</h2>
-            <p style="font-size: 16px; margin-bottom: 15px;">Please read carefully before starting:</p>
-            <ul>
-                <li>The test will be conducted in <strong>fullscreen mode</strong></li>
-                <li>Exiting fullscreen or switching tabs will be recorded as a <strong>violation</strong></li>
-                <li>You have a <strong>time limit</strong> to complete the test</li>
-                <li>Your answers will be auto-saved periodically</li>
-                <li>Once submitted, you cannot edit your answers</li>
+        <div class="confirmation-content" style="max-width: 600px;">
+            <h2 style="color: #EA5A2F; margin-bottom: 20px;">Test Rules & Confirmation</h2>
+            <p style="font-size: 16px; margin-bottom: 20px;">Please read carefully before starting:</p>
+            <ul style="list-style: disc; padding-left: 25px; line-height: 2; font-size: 15px;">
+                <li><strong>Time Limit:</strong> 2 hours for all 3 questions</li>
+                <li><strong>Questions:</strong> Q1 worth 4 points, Q2 worth 6 points, and 1 proof question worth 10
+                    points</li>
+                <li>A latex syntax helper will be available for Q3</li>
+                <li>Fullscreen mode will activate automatically. Any tab switching will be recorded.</li>
+                <li>Once the test starts, the timer cannot be paused. The test will auto-submit when time expires</li>
+                <li><strong>IMPORTANT:</strong> If you accidentally close the tab, you can resume where you left off,
+                    but a violation will be recorded</li>
+                <li>If you encounter any issues, please notify us at <a href="mailto:dtechmathclub@gmail.com"
+                        style="color: #EA5A2F;">dtechmathclub@gmail.com</a></li>
             </ul>
-            <div class="confirmation-buttons">
-                <button class="confirm-btn cancel" onclick="cancelTest()">Cancel</button>
-                <button class="confirm-btn start" onclick="confirmStart()">Start Test</button>
+            <p style="color: #dc3545; font-weight: 600; margin-top: 20px; font-size: 14px;">
+                WARNING: Violations like tab switching and exiting fullscreen will be recorded and may affect your
+                score!
+            </p>
+            <div class="confirmation-buttons" style="margin-top: 25px;">
+                <button class="confirm-btn cancel" onclick="cancelTest()"
+                    style="background: #dc3545; flex: 1;">Cancel</button>
+                <button class="confirm-btn start" onclick="confirmStart()" style="background: #28a745; flex: 1;">I
+                    Understand - Start Test</button>
             </div>
         </div>
     </div>
