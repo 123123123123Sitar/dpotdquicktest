@@ -799,16 +799,15 @@ function showQuestion(num) {
     }
 
     const aiBtn = document.getElementById('aiToggleBtn');
-    const helpBtn = document.getElementById('latexHelpBtn');
-    if (aiBtn && helpBtn) {
+    if (aiBtn) {
         if (num === 3) {
             aiBtn.style.display = 'block';
-            helpBtn.style.display = 'flex';
         } else {
             aiBtn.style.display = 'none';
-            helpBtn.style.display = 'none';
         }
     }
+    const helpBtn = document.getElementById('latexHelpBtn');
+    if (helpBtn) helpBtn.style.display = (num === 3) ? 'flex' : 'none';
 
     // NO RUBRIC SHOWN HERE - removed logic
 
