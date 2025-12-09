@@ -139,6 +139,12 @@ async function aiGradeSubmission(submissionId) {
             aiScore: result.score, q3Score: result.score, aiFeedback: result.feedback, q3Feedback: result.feedback, aiConfidence: result.confidence,
             gradingStatus: 'ai_graded', aiGradedAt: firebase.firestore.FieldValue.serverTimestamp()
         });
+        // Update cached submission so save/notify work without refresh
+        if (sub) {
+            sub.q3_score = result.score;
+            sub.q3_feedback = result.feedback;
+            sub.gradingStatus = 'ai_graded';
+        }
         const scoreEl = document.getElementById('score_' + submissionId);
         const feedbackEl = document.getElementById('feedback_latex_' + submissionId);
         if (scoreEl) scoreEl.value = result.score;

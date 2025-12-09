@@ -1,4 +1,3 @@
-
 * {
     margin: 0;
     padding: 0;
@@ -319,9 +318,11 @@ select:focus {
     right: 0;
     bottom: 0;
     background: #f8f9fa;
-    padding: 80px 40px 40px;
-    overflow-y: auto;
+    padding: 80px 40px 100px;
+    overflow-y: scroll;
+    overflow-x: hidden;
     z-index: 100;
+    -webkit-overflow-scrolling: touch;
 }
 
 .question-box {
