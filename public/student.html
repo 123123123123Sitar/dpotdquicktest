@@ -78,61 +78,7 @@
         LaTeX Helper
     </button>
 
-    <button class="latex-help-btn" id="latexHelpBtn" onmouseenter="showLatexHelp()" onmouseleave="hideLatexHelp()">
-        ?
-    </button>
 
-    <div class="latex-help-dropdown" id="latexHelpDropdown" onmouseenter="showLatexHelp()"
-        onmouseleave="hideLatexHelp()">
-        <h3>Basic LaTeX Syntax</h3>
-
-        <div class="latex-help-section">
-            <h4>Inline Math</h4>
-            <p>Wrap math in single dollar signs: <code>$x^2 + y^2 = z^2$</code></p>
-        </div>
-
-        <div class="latex-help-section">
-            <h4>Display Math (Centered)</h4>
-            <p>Use double dollar signs:</p>
-            <p><code>$$\frac{a}{b} = \frac{c}{d}$$</code></p>
-        </div>
-
-        <div class="latex-help-section">
-            <h4>Fractions</h4>
-            <p><code>\frac{numerator}{denominator}</code></p>
-            <p>Example: <code>$\frac{1}{2}$</code></p>
-        </div>
-
-        <div class="latex-help-section">
-            <h4>Exponents & Subscripts</h4>
-            <p>Exponent: <code>x^2</code> or <code>x^{10}</code></p>
-            <p>Subscript: <code>x_1</code> or <code>x_{10}</code></p>
-        </div>
-
-        <div class="latex-help-section">
-            <h4>Square Roots</h4>
-            <p><code>\sqrt{x}</code> or <code>\sqrt[3]{x}</code></p>
-        </div>
-
-        <div class="latex-help-section">
-            <h4>Greek Letters</h4>
-            <p><code>\alpha</code>, <code>\beta</code>, <code>\gamma</code>, <code>\theta</code>, <code>\pi</code>
-            </p>
-        </div>
-
-        <div class="latex-help-section">
-            <h4>Common Symbols</h4>
-            <p>Summation: <code>\sum_{i=1}^{n}</code></p>
-            <p>Integral: <code>\int_0^1 f(x) dx</code></p>
-            <p>Less/Greater: <code>\leq</code>, <code>\geq</code></p>
-            <p>Infinity: <code>\infty</code></p>
-        </div>
-
-        <div class="latex-help-section">
-            <h4>Parentheses (Auto-sizing)</h4>
-            <p><code>\left( \frac{a}{b} \right)</code></p>
-        </div>
-    </div>
 
     <div class="ai-helper" id="aiHelper">
         <div class="ai-header">
@@ -298,8 +244,10 @@
         <div id="questionSection" class="question-section">
             <div class="timer" id="timer">Time Remaining: 2:00:00</div>
 
-            <div style="text-align: center; margin-bottom: 30px;">
-                <img src="dpotd-logo.png" alt="D.PotD" style="max-width: 600px; height: auto; width: 100%;">
+            <div
+                style="text-align: center; margin-bottom: 30px; display: flex; align-items: center; justify-content: center; gap: 15px;">
+                <img src="dpotd-icon.png" alt="D.PotD" style="width: 50px; height: 50px; border-radius: 8px;">
+                <div style="font-size: 2.5em; font-weight: bold; color: #EA5A2F;" id="testTitle">D.PotD Day 1</div>
             </div>
 
             <div id="navigationBar"
